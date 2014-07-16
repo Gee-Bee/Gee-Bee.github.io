@@ -65,6 +65,14 @@ page "/feed.xml", layout: false
 # Helpers
 ###
 
+activate :deploy do |deploy|
+  deploy.method = :git
+  deploy.branch = 'master'
+  deploy.strategy = :force_push
+  deploy.commit_message = ''
+  deploy.build_before = true
+end
+
 # Automatic image dimensions on image_tag helper
 # activate :automatic_image_sizes
 
