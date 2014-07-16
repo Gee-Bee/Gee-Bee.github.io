@@ -9,6 +9,7 @@ activate :blog do |blog|
   # blog.prefix = "blog"
 
   # blog.permalink = "{year}/{month}/{day}/{title}.html"
+  blog.permalink = "{title}.html"
   # Matcher for blog source files
   # blog.sources = "{year}-{month}-{day}-{title}.html"
   # blog.taglink = "tags/{tag}.html"
@@ -73,6 +74,8 @@ activate :deploy do |deploy|
   deploy.build_before = true
 end
 
+activate :directory_indexes
+
 # Automatic image dimensions on image_tag helper
 # activate :automatic_image_sizes
 
@@ -91,6 +94,10 @@ set :css_dir, 'stylesheets'
 set :js_dir, 'javascripts'
 
 set :images_dir, 'images'
+
+set :trailing_slash, false
+
+set :debug_assets, true
 
 # Build-specific configuration
 configure :build do

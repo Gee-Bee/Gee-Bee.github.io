@@ -9,3 +9,4 @@ gem 'middleman-blog', '~> 3.5.3'
 gem 'builder', '~> 3.0'
 
 gem 'middleman-deploy', git: 'https://github.com/Gee-Bee/middleman-deploy.git', branch: 'git-user-details'
+gem 'bootstrap-sass', '~> 3.2.0.0'
