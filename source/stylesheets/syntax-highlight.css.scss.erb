@@ -1,0 +1,8 @@
+<%= Rouge::Themes::Monokai.render(:scope => '.highlight') %>
+
+$pre-bg: #49483e;
+
+pre {
+  background-color: $pre-bg;
+  border-color: darken($pre-bg, 20%);
+}

@@ -10,7 +10,8 @@
     = feed_tag :atom, "#{blog.options.prefix.to_s}/feed.xml", title: "Atom Feed"
   %body
     #main{role: "main"}
-      = yield
+      = find_and_preserve do
+        = yield
     %aside
       %h2 Recent Articles
       %ol
