@@ -11,73 +11,53 @@
   </author>
   <entry>
     <title>Manage your dotfiles with ease</title>
-    <link rel="alternate" href="http://blog.url.com/easy-management-of-your-dotfiles"/>
-    <id>http://blog.url.com/easy-management-of-your-dotfiles</id>
+    <link rel="alternate" href="http://blog.url.com/manage-your-dotfiles-with-ease"/>
+    <id>http://blog.url.com/manage-your-dotfiles-with-ease</id>
     <published>2014-08-14T16:01:00+02:00</published>
-    <updated>2014-08-14T16:55:24+02:00</updated>
+    <updated>2014-08-19T08:55:04+02:00</updated>
     <author>
       <name>Article Author</name>
     </author>
-    <content type="html">&lt;p&gt;There are mainly 2 steps to manage your dotfiles easily:&lt;/p&gt;
+    <content type="html">&lt;p&gt;There are are two main steps required to easily manage dotfiles (between machines or installations):&lt;/p&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;
-    &lt;p&gt;Keeping it in sync beetween computers with git repository&lt;/p&gt;
-
-    &lt;p&gt;Previously I synced my dotfiles using Copy (Dropbox clone)
- backup service, which caused problems with file permissions(every file had added &lt;code&gt;x&lt;/code&gt; flag when synced to new computer).&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;Having script which takes care of linking files in dotfiles repo folder to their proper locations in the system.&lt;/p&gt;
-  &lt;/li&gt;
+  &lt;li&gt;Keeping it in sync beetween computers with git repository&lt;/li&gt;
+  &lt;li&gt;Having script which takes care of linking files in dotfiles repo folder to their proper locations in the system.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;While setting git repo for our dotfiles is simple, writing a linking script isn't so obvious.&lt;/p&gt;
 
-&lt;p&gt;Usually adding new files to dotfile folder imply modifying a script which makes it hard to manage over time.
+&lt;p&gt;Usually adding new files to dotfile folder imply modifying a script which makes it hard to manage over time as it grows.
 My idea was to write a self-managable dotfile repo, which structure mirror the file structure on the local OS (repo has one &lt;code&gt;home&lt;/code&gt; folder).
 Additionally I decided to link only files, not directories, because you may want to have some files in shared dotfiles folder only on one local machine.&lt;/p&gt;
 
 &lt;p&gt;In result you don't have to change a script when you add new dotfiles as long as you keep file hierarchy in a repo the same as in the system.
 Look at the source:&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class="language-ruby"&gt;#!/usr/bin/env ruby
+&lt;pre&gt;&lt;code class="highlight ruby"&gt;&lt;span class="c1"&gt;#!/usr/bin/env ruby&lt;/span&gt;
 
-require 'fileutils'
-require 'pathname'
+&lt;span class="nb"&gt;require&lt;/span&gt; &lt;span class="s1"&gt;'fileutils'&lt;/span&gt;
+&lt;span class="nb"&gt;require&lt;/span&gt; &lt;span class="s1"&gt;'pathname'&lt;/span&gt;
 
-# Recursively link files from source to target directory
-def linkify source_path, target_path
-  Dir.glob( File.join(source_path, '*'), File::FNM_DOTMATCH ).each do |src_fn_path|
-    src_pn = Pathname.new src_fn_path
-    next if %w(. ..).include? src_pn.basename.to_s
-    if src_pn.directory?
-      FileUtils.mkdir_p File.join(target_path, src_pn.basename)
-      linkify File.join(source_path, src_pn.basename), File.join(target_path, src_pn.basename)
-    else
-      FileUtils.ln_s src_pn, File.join(target_path, src_pn.basename), force: true
-    end
-  end
-end
-
-
-linkify File.join( File.dirname(__FILE__), 'home'), ENV['HOME']
+&lt;span class="c1"&gt;# Recursively link files from source to target directory&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;linkify&lt;/span&gt; &lt;span class="n"&gt;source_path&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;target_path&lt;/span&gt;
+  &lt;span class="no"&gt;Dir&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;glob&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="no"&gt;File&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source_path&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;'*'&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="no"&gt;File&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="no"&gt;FNM_DOTMATCH&lt;/span&gt; &lt;span class="p"&gt;).&lt;/span&gt;&lt;span class="nf"&gt;each&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; &lt;span class="o"&gt;|&lt;/span&gt;&lt;span class="n"&gt;src_fn_path&lt;/span&gt;&lt;span class="o"&gt;|&lt;/span&gt;
+    &lt;span class="n"&gt;src_pn&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="no"&gt;Pathname&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;new&lt;/span&gt; &lt;span class="n"&gt;src_fn_path&lt;/span&gt;
+    &lt;span class="k"&gt;next&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="sx"&gt;%w(. ..)&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;include?&lt;/span&gt; &lt;span class="n"&gt;src_pn&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;basename&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;to_s&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;src_pn&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;directory?&lt;/span&gt;
+      &lt;span class="no"&gt;FileUtils&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;mkdir_p&lt;/span&gt; &lt;span class="no"&gt;File&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;target_path&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;src_pn&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;basename&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="n"&gt;linkify&lt;/span&gt; &lt;span class="no"&gt;File&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;source_path&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;src_pn&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;basename&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="no"&gt;File&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;target_path&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;src_pn&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;basename&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;else&lt;/span&gt;
+      &lt;span class="no"&gt;FileUtils&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;ln_s&lt;/span&gt; &lt;span class="n"&gt;src_pn&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="no"&gt;File&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;target_path&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;src_pn&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;basename&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="ss"&gt;force: &lt;/span&gt;&lt;span class="kp"&gt;true&lt;/span&gt;
+    &lt;span class="k"&gt;end&lt;/span&gt;
+  &lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;span class="n"&gt;linkify&lt;/span&gt; &lt;span class="no"&gt;File&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt; &lt;span class="no"&gt;File&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;expand_path&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="no"&gt;File&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nf"&gt;dirname&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kp"&gt;__FILE__&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt; &lt;span class="s1"&gt;'home'&lt;/span&gt; &lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="no"&gt;ENV&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;'HOME'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;Whenever you modify your dotfiles, just run this script and you're good to go.
-Here is &lt;a href="https://github.com/Gee-Bee/dotfiles"&gt;my dotfiles repo&lt;/a&gt;.&lt;/p&gt;
-</content>
-  </entry>
-  <entry>
-    <title>Examplee Article</title>
-    <link rel="alternate" href="http://blog.url.com/example-article"/>
-    <id>http://blog.url.com/example-article</id>
-    <published>2012-01-01T01:00:00+01:00</published>
-    <updated>2014-07-16T13:25:31+02:00</updated>
-    <author>
-      <name>Article Author</name>
-    </author>
-    <content type="html">&lt;p&gt;This is an example article. You probably want to delete it and write your own articles!&lt;/p&gt;
+&lt;p&gt;Whenever you add new dotfiles to your repo , just run this script and you're good to go.&lt;/p&gt;
+
+&lt;p&gt;Here is &lt;a href="https://github.com/Gee-Bee/dotfiles"&gt;my dotfiles repo&lt;/a&gt;.&lt;/p&gt;
 </content>
   </entry>
 </feed>
