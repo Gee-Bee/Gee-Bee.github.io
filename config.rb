@@ -1,4 +1,16 @@
 ###
+# Requires
+###
+require 'slim'
+require 'pry'
+
+# Set slim-lang output style
+Slim::Engine.set_default_options :pretty => true
+
+# Set template languages
+set :slim, :layout_engine => :slim
+
+###
 # Blog settings
 ###
 
@@ -13,7 +25,7 @@ activate :blog do |blog|
   # Matcher for blog source files
   # blog.sources = "{year}-{month}-{day}-{title}.html"
   # blog.taglink = "tags/{tag}.html"
-  # blog.layout = "layout"
+  blog.layout = "article"
   # blog.summary_separator = /(READMORE)/
   # blog.summary_length = 250
   # blog.year_link = "{year}.html"
@@ -108,6 +120,8 @@ configure :build do
 
   # Minify Javascript on build
   activate :minify_javascript
+
+  activate :minify_html
 
   # Enable cache buster
   # activate :asset_hash
