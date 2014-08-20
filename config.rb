@@ -58,8 +58,10 @@ end
 # Disqus
 ###
 
-activate :disqus do |d|
-  d.shortname = 'gee-bee-development'
+configure :development do
+  activate :disqus do |d|
+    d.shortname = 'gee-bee-development'
+  end
 end
 
 configure :build do
