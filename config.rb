@@ -4,12 +4,6 @@
 require 'slim'
 require 'pry'
 
-# Set slim-lang output style
-Slim::Engine.set_default_options :pretty => true
-
-# Set template languages
-set :slim, :layout_engine => :slim
-
 ###
 # Blog settings
 ###
@@ -42,9 +36,37 @@ activate :blog do |blog|
   # blog.page_link = "page/{num}"
 end
 
+###
+# Syntax
+###
+
 activate :syntax
 
-page "/feed.xml", layout: false
+###
+# Deploy
+###
+
+activate :deploy do |deploy|
+  deploy.method = :git
+  deploy.branch = 'master'
+  deploy.strategy = :force_push
+  deploy.commit_message = ''
+  deploy.build_before = true
+end
+
+###
+# Disqus
+###
+
+activate :disqus do |d|
+  d.shortname = 'gee-bee-development'
+end
+
+configure :build do
+  activate :disqus do |d|
+    d.shortname = 'gee-bee'
+  end
+end
 
 ###
 # Compass
@@ -72,6 +94,8 @@ page "/feed.xml", layout: false
 #   page "/admin/*"
 # end
 
+page "/feed.xml", layout: false
+
 # Proxy pages (http://middlemanapp.com/basics/dynamic-pages/)
 # proxy "/this-page-has-no-template.html", "/template-file.html", locals: {
 #  which_fake_page: "Rendering a fake page with a local variable" }
@@ -79,14 +103,6 @@ page "/feed.xml", layout: false
 ###
 # Helpers
 ###
-
-activate :deploy do |deploy|
-  deploy.method = :git
-  deploy.branch = 'master'
-  deploy.strategy = :force_push
-  deploy.commit_message = ''
-  deploy.build_before = true
-end
 
 activate :directory_indexes
 
