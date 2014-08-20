@@ -1,2 +1,3 @@
-#= require 'vendor/_jquery'
-#= require '_bootstrap-custom'
+#= require 'vendor/jquery'
+#= require 'bootstrap-custom'
+#= require 'search-box'

@@ -131,6 +131,8 @@ set :trailing_slash, false
 
 set :debug_assets, true
 
+set :domain_name, 'gee-bee.github.io'
+
 # Build-specific configuration
 configure :build do
   # For example, change the Compass output style for deployment

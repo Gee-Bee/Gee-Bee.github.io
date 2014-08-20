@@ -6,4 +6,10 @@ nav.navbar.navbar-default role='navigation'
     .collapse.navbar-collapse
       ul.nav.navbar-nav.navbar-right
         li
+          form.navbar-form action='http://www.google.com/search' method='GET' role='search' style='position:relative'
+            input type='hidden' name='q' value="site:#{domain_name}"
+            .has-feedback
+              input.form-control.search-input type='text' name='q' autocomplete='off'
+              span.glyphicon.glyphicon-search.form-control-feedback
+        li
           a href='/' Home

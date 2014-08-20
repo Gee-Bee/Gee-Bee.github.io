@@ -1,0 +1,13 @@
+@import 'compass/css3/transition'
+
+.navbar
+  .search-input
+    width: 200px
+    +transition(width .5s)
+    + .glyphicon
+      opacity: .3
+      +transition(width .5s)
+    &:focus
+      width: 400px
+      + .glyphicon
+        opacity: .8
