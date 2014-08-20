@@ -1,0 +1,1 @@
+.navbar .search-input{width:200px;-moz-transition:width 0.5s;-o-transition:width 0.5s;-webkit-transition:width 0.5s;transition:width 0.5s}.navbar .search-input+.glyphicon{opacity:0.3;-moz-transition:width 0.5s;-o-transition:width 0.5s;-webkit-transition:width 0.5s;transition:width 0.5s}.navbar .search-input:focus{width:400px}.navbar .search-input:focus+.glyphicon{opacity:0.8}

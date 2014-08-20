@@ -1,0 +1,1 @@
+(function(){$(function(){return $(".navbar .search-input + .glyphicon").on("mousedown",function(){var n,t;return t=$(this),n=t.siblings(".search-input"),setTimeout(function(){return n.focus()},0),n.val().length>0?t.closest("form").submit():void 0})})}).call(this);
