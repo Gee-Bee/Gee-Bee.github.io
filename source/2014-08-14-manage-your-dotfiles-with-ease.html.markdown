@@ -1,7 +1,7 @@
 ---
 title: Manage your dotfiles with ease
 date: 2014-08-14 14:01 UTC
-tags: dotfiles, repo
+tags: dotfiles, repo, ruby
 ---
 
 There are are two main steps required to easily manage dotfiles (between machines or installations):
