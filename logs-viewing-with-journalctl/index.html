@@ -1,0 +1,54 @@
+<!DOCTYPE html> <html> <head> <meta charset=utf-8 /> <meta content="IE=edge;chrome=1" http-equiv=X-UA-Compatible /> <title> Logs viewing with journalctl - Gee Bee </title> <link href="/stylesheets/all.css" rel=stylesheet /> <script src="/javascripts/all.js"></script> <link rel=alternate type="application/atom+xml" title="Atom Feed" href="/feed.xml"/> </head> <body> <nav class="navbar navbar-default" role=navigation><div class=container><div class=navbar-header><div class=navbar-brand href="#"><a href="/">Gee Bee</a></div></div><div class="collapse navbar-collapse"><ul class="nav navbar-nav navbar-right"><li><form action="//www.google.com/search" class=navbar-form method=GET role=search style="position:relative"><input name=q type=hidden value="site:gee-bee.github.io"/><div class=has-feedback><input autocomplete=off class="form-control search-input" name=q /><span class="glyphicon glyphicon-search form-control-feedback"></span></div></form></li><li><a href="/">Home</a></li></ul></div></div></nav> <div class=container> <div id=main role=main> <article><h2>Logs viewing with journalctl</h2><p>If you can't find syslog in <code>/var/log/messages</code> (on Fedora-family dist) or <code>/var/syslog</code> (Debian-family), it is highly likely that your system makes use of systemd's journalctl.</p> <p>You can install rsyslog, but use it only when monitoring tools you're using rely on old log files hierarchy.</p> <p>For day-to-day use journalctl is very friendly to use:</p> <ol> <li> <p>Tab-completion:</p> <pre><code class="highlight plaintext">~ ❯❯❯ journalctl &lt;TAB&gt;
+ -- possible fields --
+CODE_FILE   MESSAGE_ID          USER_UNIT         _COMM            _KERNEL_SUBSYSTEM            _SYSTEMD_CGROUP      _TRANSPORT      __CURSOR
+CODE_FUNC   PRIORITY            _AUDIT_LOGINUID   _EXE             _MACHINE_ID                  _SYSTEMD_OWNER_UID   _UDEV_DEVLINK   __MONOTONIC_TIMESTAMP
+CODE_LINE   SYSLOG_FACILITY     _AUDIT_SESSION    _GID             _PID                         _SYSTEMD_SESSION     _UDEV_DEVNODE   __REALTIME_TIMESTAMP
+ERRNO       SYSLOG_IDENTIFIER   _BOOT_ID          _HOSTNAME        _SELINUX_CONTEXT             _SYSTEMD_UNIT        _UDEV_SYSNAME
+MESSAGE     SYSLOG_PID          _CMDLINE          _KERNEL_DEVICE   _SOURCE_REALTIME_TIMESTAMP   _SYSTEMD_USER_UNIT   _UID  
+</code></pre> </li> <li> <p>Filter by application using <code>_COMM</code>, ex.</p> <pre><code class="highlight plaintext">~ ❯❯❯ journalctl _COMM=anacron
+-- Logs begin at Wed 2014-04-16 09:14:59 CEST, end at Fri 2014-08-22 09:01:09 CEST. --
+Apr 16 09:48:35 localhost.localdomain anacron[1113]: Anacron started on 2014-04-16
+Apr 16 09:48:35 localhost.localdomain anacron[1113]: Will run job `cron.daily' in 49 min.
+Apr 16 09:48:35 localhost.localdomain anacron[1113]: Will run job `cron.weekly' in 69 min.
+Apr 16 09:48:35 localhost.localdomain anacron[1113]: Will run job `cron.monthly' in 89 min.
+Apr 16 09:48:35 localhost.localdomain anacron[1113]: Jobs will be executed sequentially
+Apr 16 10:01:01 localhost.localdomain anacron[13065]: Anacron started on 2014-04-16
+Apr 16 10:01:01 localhost.localdomain anacron[13065]: Will run job `cron.daily' in 5 min.
+Apr 16 10:01:01 localhost.localdomain anacron[13065]: Will run job `cron.weekly' in 25 min.
+Apr 16 10:01:01 localhost.localdomain anacron[13065]: Will run job `cron.monthly' in 45 min.
+Apr 16 10:01:01 localhost.localdomain anacron[13065]: Jobs will be executed sequentially
+Apr 16 10:06:01 localhost.localdomain anacron[13065]: Job `cron.daily' started
+Apr 16 10:08:41 localhost.localdomain anacron[13065]: Job `cron.daily' terminated
+-- Reboot --
+Apr 16 10:22:37 localhost.localdomain anacron[1114]: Anacron started on 2014-04-16
+Apr 16 10:22:37 localhost.localdomain anacron[1114]: Will run job `cron.daily' in 7 min.
+Apr 16 10:22:37 localhost.localdomain anacron[1114]: Will run job `cron.weekly' in 27 min.
+Apr 16 10:22:37 localhost.localdomain anacron[1114]: Will run job `cron.monthly' in 47 min.
+Apr 16 10:22:37 localhost.localdomain anacron[1114]: Jobs will be executed sequentially
+Apr 16 10:29:37 localhost.localdomain anacron[1114]: Job `cron.daily' started
+Apr 16 10:29:38 localhost.localdomain anacron[1114]: Job `cron.daily' terminated (mailing output)
+...
+</code></pre> </li> <li> <p>Filter additionally by time range using <code>--since</code> and <code>--until</code>.<br/> ex. for last two days</p> <pre><code class="highlight plaintext">~ ❯❯❯ journalctl _COMM=anacron --since=-2d
+-- Logs begin at Wed 2014-04-16 09:14:59 CEST, end at Fri 2014-08-22 09:50:05 CEST. --
+Aug 21 09:01:01 localhost.localdomain anacron[4620]: Anacron started on 2014-08-21
+Aug 21 09:01:01 localhost.localdomain anacron[4620]: Will run job `cron.daily' in 15 min.
+Aug 21 09:01:01 localhost.localdomain anacron[4620]: Jobs will be executed sequentially
+Aug 21 09:16:01 localhost.localdomain anacron[4620]: Job `cron.daily' started
+Aug 21 09:18:09 localhost.localdomain anacron[4620]: Job `cron.daily' terminated (mailing output)
+Aug 21 09:18:09 localhost.localdomain anacron[4620]: Normal exit (1 job run)
+-- Reboot --
+Aug 22 08:01:01 localhost.localdomain anacron[2812]: Anacron started on 2014-08-22
+Aug 22 08:01:01 localhost.localdomain anacron[2812]: Will run job `cron.daily' in 29 min.
+Aug 22 08:01:01 localhost.localdomain anacron[2812]: Jobs will be executed sequentially
+Aug 22 08:30:01 localhost.localdomain anacron[2812]: Job `cron.daily' started
+Aug 22 08:32:18 localhost.localdomain anacron[2812]: Job `cron.daily' terminated (mailing output)
+Aug 22 08:32:18 localhost.localdomain anacron[2812]: Normal exit (1 job run)
+</code></pre> </li> </ol> <p>For more options check <code>man journalctl</code>.</p> </article><h3>Comments</h3><div id=disqus_thread></div> <script>
+            //<![CDATA[
+                (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                    dsq.src = '//gee-bee.disqus.com/embed.js';
+                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                })();
+            //]]>
+            </script> <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript> <a href="//disqus.com" class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a> </script> </div> </div> </body> </html>
